@@ -6,6 +6,19 @@ mirror where each sound was found on the disc.
 Open a disc image or an extracted game folder, wait for the scan, pick what you want and
 hit Extract. You can preview any track before saving it.
 
+![Start screen](docs/start.png)
+
+![Tracks found in Bully](docs/tracks.png)
+
+![Extracting](docs/extracting.png)
+
+## Download
+
+Grab `ps2audioextractor.exe` from the
+[latest release](https://github.com/stompedheroutinprada/PS2-Audio-Extractor/releases/latest)
+and run it. No install needed. It uses the WebView2 runtime that comes with Windows 10
+and 11.
+
 ## What it handles
 
 - Disc images: `.iso` (DVD games) and raw `.bin` (CD games, 2352-byte sectors). Extracted
@@ -62,7 +75,9 @@ python tools/check_all.py
 - A few codecs some formats can carry but PS2 games rarely use (GameCube DSP, ATRAC,
   MPEG). Those tracks show up in the list with a note instead of being extracted.
 
-## Credits
+## License
+
+MIT, see [LICENSE](LICENSE).
 
 The format parsers and decoders follow vgmstream's source. Its license is in
 [LICENSE-vgmstream](LICENSE-vgmstream).
