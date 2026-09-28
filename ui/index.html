@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PS2 Audio Extractor</title>
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <!-- title bar (the window is frameless) -->
+  <header class="titlebar">
+    <div class="tb-drag" id="tbDrag">
+      <span class="tb-title">PS2 Audio Extractor</span>
+      <span class="tb-sub" id="tbSub"></span>
+    </div>
+    <div class="tb-buttons">
+      <button class="tb-btn" id="winMin" title="Minimize" aria-label="Minimize">
+        <svg viewBox="0 0 10 10"><path d="M0 5.5h10"/></svg>
+      </button>
+      <button class="tb-btn" id="winMax" title="Maximize" aria-label="Maximize">
+        <svg viewBox="0 0 10 10" id="maxIcon"><rect x="0.5" y="0.5" width="9" height="9"/></svg>
+      </button>
+      <button class="tb-btn close" id="winClose" title="Close" aria-label="Close">
+        <svg viewBox="0 0 10 10"><path d="M0.5 0.5l9 9M9.5 0.5l-9 9"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Nothing open yet -->
+    <section class="start" id="start">
+      <div class="drop" id="drop">
+        <div class="drop-art" aria-hidden="true">
+          <svg viewBox="0 0 64 64" id="disc">
+            <circle class="disc-body" cx="32" cy="32" r="29"/>
+            <circle class="groove" cx="32" cy="32" r="24"/>
+            <circle class="groove" cx="32" cy="32" r="19"/>
+            <circle class="groove" cx="32" cy="32" r="14.5"/>
+            <path class="shine" d="M32 5a27 27 0 0 1 23.4 13.5"/>
+            <path class="shine" d="M32 59a27 27 0 0 1 -23.4 -13.5"/>
+            <circle class="hub" cx="32" cy="32" r="8"/>
+            <circle class="hole" cx="32" cy="32" r="3"/>
+          </svg>
+        </div>
+        <h1>Pull the audio out of a PS2 game</h1>
+        <p>Drop a disc image (<b>.iso</b>, <b>.bin</b>), an extracted disc folder, or any game file here.
+          Music, voices and sound effects are found wherever they're stored and saved as WAV files.</p>
+        <div class="drop-actions">
+          <button class="btn primary" id="openFile">Open disc image…</button>
+          <button class="btn" id="openFolder">Open folder…</button>
+        </div>
+        <ul class="formats">
+          <li><b>100+</b> PS2 audio formats</li><li><b>VAG</b>, <b>ADS</b>, <b>HD/BD</b> banks</li>
+          <li><b>ADX</b>, AFS, AIX</li><li>EA, Ubisoft, Konami, Square…</li>
+          <li>audio in <b>PSS/SFD</b> videos</li><li>inside compressed data</li><li>headerless sounds</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- A game is open -->
+    <section class="work hidden" id="work">
+      <div class="source">
+        <div class="source-info">
+          <div class="source-title"><span id="gameTitle"></span><span class="serial" id="gameSerial"></span></div>
+          <div class="source-meta" id="gameMeta"></div>
+        </div>
+        <div class="source-actions">
+          <label class="opt" title="Also look for sounds stored with no header at all (common in sound banks). They don't say their sample rate, so pick the one to use.">
+            <input type="checkbox" id="optRaw" checked> Headerless sounds at
+            <select id="optRawRate">
+              <option>11025</option><option>16000</option><option selected>22050</option><option>24000</option>
+              <option>32000</option><option>44100</option><option>48000</option>
+            </select> Hz
+          </label>
+          <button class="btn ghost" id="rescan" title="Search the game again">Rescan</button>
+          <button class="btn ghost" id="change">Open another…</button>
+        </div>
+      </div>
+
+      <div class="scan hidden" id="scan">
+        <div class="scan-row">
+          <span class="spinner"></span>
+          <span class="scan-text" id="scanText">Searching…</span>
+          <span class="scan-pct" id="scanPct"></span>
+          <button class="btn ghost sm" id="scanCancel">Stop</button>
+        </div>
+        <div class="bar"><div id="scanBar"></div></div>
+      </div>
+
+      <div class="results hidden" id="results">
+        <div class="toolbar">
+          <div class="chips" id="chips"></div>
+          <input class="search" id="search" type="search" placeholder="Filter by name or file" spellcheck="false">
+        </div>
+        <div class="table-wrap" id="tableWrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="c-check"><input type="checkbox" id="checkAll" title="Select all shown"></th>
+                <th class="c-play"></th>
+                <th>Saved as</th>
+                <th>Found in</th>
+                <th class="c-fmt">Format</th>
+                <th class="c-num">Channels</th>
+                <th class="c-num">Rate</th>
+                <th class="c-num">Length</th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+          <div class="empty hidden" id="empty"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer hidden" id="footer">
+    <div class="out">
+      <span class="out-label">Save to</span>
+      <button class="out-path" id="outPath" title="Change where the audio is saved"></button>
+    </div>
+    <div class="extract-progress hidden" id="exProgress">
+      <div class="ex-text" id="exText"></div>
+      <div class="bar"><div id="exBar"></div></div>
+    </div>
+    <label class="opt loops" id="loopsOpt" title="How sounds that loop (mostly music) are saved">
+      Loops
+      <select id="optLoops">
+        <option value="once">once, with loop points</option>
+        <option value="twice">twice, then fade out</option>
+      </select>
+    </label>
+    <div class="footer-actions">
+      <button class="btn ghost hidden" id="openOut">Open folder</button>
+      <button class="btn ghost hidden" id="exCancel">Stop</button>
+      <button class="btn primary" id="extract" disabled>Extract</button>
+    </div>
+  </footer>
+
+  <div class="drop-overlay hidden" id="dropOverlay"><div>Drop to open</div></div>
+  <div class="toasts" id="toasts"></div>
+  <audio id="audio" preload="none"></audio>
+  <script src="app.js"></script>
+</body>
+</html>

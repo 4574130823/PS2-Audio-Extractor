@@ -1,0 +1,12 @@
+/target
+/tools/vgmstream
+/tools/testdata
+/tools/out
+__pycache__/
+
+# game images and extracted audio
+*.iso
+*.bin
+*.cue
+*.chd
+/PS2 Audio/
