@@ -77,7 +77,8 @@ python tools/check_all.py
 
 ## License
 
-MIT, see [LICENSE](LICENSE).
+All rights reserved. You can download and use the program, but the code may not be
+copied, modified, reused or redistributed without permission. See [LICENSE](LICENSE).
 
 The format parsers and decoders follow vgmstream's source. Its license is in
 [LICENSE-vgmstream](LICENSE-vgmstream).
