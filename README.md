@@ -14,10 +14,10 @@ hit Extract. You can preview any track before saving it.
 
 ## Download
 
-Grab `ps2audioextractor.exe` from the
-[latest release](https://github.com/4574130823/PS2-Audio-Extractor/releases/latest)
-and run it. No install needed. It uses the WebView2 runtime that comes with Windows 10
-and 11.
+Grab the zip from the
+[latest release](https://github.com/4574130823/PS2-Audio-Extractor/releases/latest),
+unzip it and run `ps2audioextractor.exe`. No install needed. It uses the WebView2 runtime
+that comes with Windows 10 and 11.
 
 ## What it handles
 
